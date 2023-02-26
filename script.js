@@ -48,15 +48,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function stylePixel(pixel) {
-        if (CURRENT_MODE === "colorful") {
-            const red = Math.floor(Math.random() *255);
-            const green = Math.floor(Math.random() *255); 
-            const blue = Math.floor(Math.random() *255); 
-            pixel.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
-        } else {
+        if (CURRENT_MODE === "color") {
             pixel.style.backgroundColor = CURRENT_COLOR;
-            console.log(pixel.style.backgroundColor);
-        } 
+        } else {
+            const red = Math.floor(Math.random()*255);
+            const green = Math.floor(Math.random()*255); 
+            const blue = Math.floor(Math.random()*255); 
+            pixel.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+        }
     }
 
     function setPixelListener() {
@@ -88,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
         PIXELS = []
         createGrid(container, pixelPerRow);
         setPixelListener();
-        setPenColor(CURRENT_COLOR);
+        setMode(CURRENT_MODE);
     }
 
     function clearDiv(element) {
