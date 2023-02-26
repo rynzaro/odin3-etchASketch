@@ -1,11 +1,12 @@
-SIZE = 20;
-ROWS = 16;
-COLUMNS = 16;
-INITIAL_COLOR = "lightblue";
+SIZE = 500;
+PIXEL_PER_ROW = 16;
+INITIAL_COLOR = "white";
+BACKGROUND_COLOR = "lightgrey";
 ACTIVE_COLOR = "lightyellow";
 var PIXELS = [];
 var ENABLE_DRAW = false;
 var CURRENT_COLOR = "black";
+var CURRENT_MODE = "color";
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -14,65 +15,99 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const containerGrid = document.querySelector('.container-grid');
     const resetButton = document.querySelector('.button-reset');
-    const setBlack = document.querySelector('[data-color="black"]');
-    const setRed = document.querySelector('[data-color="red"]');
-    const setYellow = document.querySelector('[data-color="yellow"]');
-    const setBlue = document.querySelector('[data-color="blue"]');
+    const setColor = document.querySelector('[data-mode="color"]');
+    const setColorful = document.querySelector('[data-mode="colorful"]');
+    const setGrayscale = document.querySelector('[data-mode="grayscale"]')
+    const setSize = document.querySelector('[data-setting="size"]');
 
-    createGrid(containerGrid);
-    setPixelListener();
-    setColor(CURRENT_COLOR);
+    initGrid(containerGrid, PIXEL_PER_ROW);
 
     resetButton.addEventListener('click',() => resetGrid());
-    setBlack.addEventListener('click', () => setColor("black"));
-    setRed.addEventListener('click', () => setColor("red"));
-    setYellow.addEventListener('click', () => setColor("yellow"));
-    setBlue.addEventListener('click', () => setColor("blue"));
-    
-});
+    setColor.addEventListener('click', () => setMode("color"));
+    setColorful.addEventListener('click', () => setMode("colorful"));
+    setGrayscale.addEventListener('click', () => setMode("grayscale"));
+    setSize.addEventListener('click', () => setPixelPerRow(containerGrid));
 
-function createGrid(container) {
-    for (let i = 0; i < COLUMNS; i++) {
-        const row = document.createElement('div');
-        row.style.display = "flex";
+    function createGrid(container, pixelPerRow) {
+        const size = SIZE / pixelPerRow;
 
-        for (let j = 0; j < ROWS; j++) {
-            var element = document.createElement('div');
-            element.style.backgroundColor = INITIAL_COLOR;
-            element.style.height = `${SIZE}px`
-            element.style.width = `${SIZE}px`
-            row.appendChild(element);
-            PIXELS.push(element);
-        }
-        container.appendChild(row);
-    }
-    console.log(PIXELS);
-}
-
-// will reset the grid to the initial color
-function resetGrid() {
-    PIXELS.forEach((pixel) => {
-        pixel.style.backgroundColor = INITIAL_COLOR;
-    })
-}
-
-// sets the pixel listener
-function setPixelListener() {
-    PIXELS.forEach((pixel) => {
-        pixel.addEventListener('mouseover', (event) => {
-            if (ENABLE_DRAW) {
-                pixel.style.backgroundColor = CURRENT_COLOR;
+        for (let i = 0; i < pixelPerRow; i++) {
+            const row = document.createElement('div');
+            for (let j = 0; j < pixelPerRow; j++) {
+                var pixel = document.createElement('div');
+                pixel.style.backgroundColor = INITIAL_COLOR;
+                pixel.style.height = `${size}px`;
+                pixel.style.width = `${size}px`;
+                pixel.style.border = `1px grey solid`;
+                pixel.style.boxSizing = `border-box`;
+                PIXELS.push(pixel);
+                row.appendChild(pixel);
             }
+            container.appendChild(row);
+        }
+    }
+
+    function stylePixel(pixel) {
+        if (CURRENT_MODE === "colorful") {
+            const red = Math.floor(Math.random() *255);
+            const green = Math.floor(Math.random() *255); 
+            const blue = Math.floor(Math.random() *255); 
+            pixel.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+        } else {
+            pixel.style.backgroundColor = CURRENT_COLOR;
+            console.log(pixel.style.backgroundColor);
+        } 
+    }
+
+    function setPixelListener() {
+        PIXELS.forEach((pixel) => {
+            pixel.addEventListener('mouseover', (event) => {
+                if (ENABLE_DRAW) {
+                    stylePixel(pixel);
+                }
+            })
+            pixel.addEventListener('mousedown', (event) => {
+                stylePixel(pixel);
+            })
         })
-    })
-}
+    }
 
-// Will set the color in which to be drawn
-function setColor(color) {
-    const oldColorButton = document.querySelector(`[data-color=${CURRENT_COLOR}]`);
-    oldColorButton.style.backgroundColor = INITIAL_COLOR;
-    const activeColorButton = document.querySelector(`[data-color=${color}]`)
-    activeColorButton.style.backgroundColor = ACTIVE_COLOR; 
-    CURRENT_COLOR = color;
-}
+    function setPenColor(color) {
+        CURRENT_COLOR = color;
+    }
 
+    function setMode(mode) {
+        const oldActiveButton = document.querySelector(`[data-mode=${CURRENT_MODE}]`);
+        oldActiveButton.classList.toggle('btn-active');
+        const activeButton = document.querySelector(`[data-mode=${mode}]`)
+        activeButton.classList.toggle('btn-active');
+        CURRENT_MODE = mode;
+    }
+
+    function initGrid(container, pixelPerRow) {
+        PIXELS = []
+        createGrid(container, pixelPerRow);
+        setPixelListener();
+        setPenColor(CURRENT_COLOR);
+    }
+
+    function clearDiv(element) {
+        while (element.hasChildNodes()) {
+            element.removeChild(element.firstChild);
+        }
+    }
+
+    function setPixelPerRow(container) {
+        do{
+            var pixelPerRow = parseInt(window.prompt("Please enter a number from 1 to 100", ""), 10);
+        }while(isNaN(pixelPerRow) || pixelPerRow > 100 || pixelPerRow < 1);
+        clearDiv(container);
+        initGrid(container, pixelPerRow);
+    }
+
+    function resetGrid() {
+        PIXELS.forEach((pixel) => {
+            pixel.style.backgroundColor = INITIAL_COLOR;
+        })
+    }    
+});
