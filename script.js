@@ -1,6 +1,6 @@
 SIZE = 500;
 PIXEL_PER_ROW = 16;
-INITIAL_COLOR = "white";
+GRID_BACKGROUND_COLOR = "white";
 BACKGROUND_COLOR = "lightgrey";
 ACTIVE_COLOR = "lightyellow";
 var PIXELS = [];
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetButton = document.querySelector('.button-reset');
     const setColor = document.querySelector('[data-mode="color"]');
     const setColorful = document.querySelector('[data-mode="colorful"]');
-    const setGrayscale = document.querySelector('[data-mode="grayscale"]')
+    const setEraser = document.querySelector('[data-mode="erase"]');
     const setSize = document.querySelector('[data-setting="size"]');
 
     initGrid(containerGrid, PIXEL_PER_ROW);
@@ -25,9 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
     resetButton.addEventListener('click',() => resetGrid());
     setColor.addEventListener('click', () => setMode("color"));
     setColorful.addEventListener('click', () => setMode("colorful"));
-    setGrayscale.addEventListener('click', () => setMode("grayscale"));
+    setEraser.addEventListener('click', () => setMode("erase"));
     setSize.addEventListener('click', () => setPixelPerRow(containerGrid));
-
     function createGrid(container, pixelPerRow) {
         const size = SIZE / pixelPerRow;
 
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.createElement('div');
             for (let j = 0; j < pixelPerRow; j++) {
                 var pixel = document.createElement('div');
-                pixel.style.backgroundColor = INITIAL_COLOR;
+                pixel.style.backgroundColor = GRID_BACKGROUND_COLOR;
                 pixel.style.height = `${size}px`;
                 pixel.style.width = `${size}px`;
                 pixel.style.border = `1px grey solid`;
@@ -48,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function stylePixel(pixel) {
-        if (CURRENT_MODE === "color") {
+        if (CURRENT_MODE === "color" || CURRENT_MODE === "erase") {
             pixel.style.backgroundColor = CURRENT_COLOR;
         } else {
             const red = Math.floor(Math.random()*255);
@@ -80,6 +79,9 @@ document.addEventListener('DOMContentLoaded', function() {
         oldActiveButton.classList.toggle('btn-active');
         const activeButton = document.querySelector(`[data-mode=${mode}]`)
         activeButton.classList.toggle('btn-active');
+        if (mode === "erase") {
+            CURRENT_COLOR = GRID_BACKGROUND_COLOR;
+        }
         CURRENT_MODE = mode;
     }
 
@@ -106,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function resetGrid() {
         PIXELS.forEach((pixel) => {
-            pixel.style.backgroundColor = INITIAL_COLOR;
+            pixel.style.backgroundColor = GRID_BACKGROUND_COLOR;
         })
     }    
 });
