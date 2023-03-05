@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const setColorful = document.querySelector('[data-mode="colorful"]');
     const setEraser = document.querySelector('[data-mode="erase"]');
     const setSize = document.querySelector('[data-setting="size"]');
+    const colorInput = document.querySelector('.color-select');
+    colorInput.value = PEN_COLOR;
 
     initGrid(containerGrid, PIXEL_PER_ROW);
 
@@ -29,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setColorful.addEventListener('click', (event) => setMode(event.target.getAttribute("data-mode")));
     setEraser.addEventListener('click', (event) => setMode(event.target.getAttribute("data-mode")));
     setSize.addEventListener('click', () => setPixelPerRow(containerGrid));
+    colorInput.addEventListener('input', () => setPenColor(colorInput.value));
     
     function createGrid(container, pixelPerRow) {
         const size = SIZE / pixelPerRow;
