@@ -6,7 +6,6 @@ ACTIVE_COLOR = "lightyellow";
 var PIXELS = [];
 var BACKGROUND_PIXELS;
 var ENABLE_DRAW = false;
-var CURRENT_COLOR = "black";
 var PEN_COLOR = "black";
 var CURRENT_MODE = "color";
 
@@ -22,8 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const setEraser = document.querySelector('[data-mode="erase"]');
     const setSize = document.querySelector('[data-setting="size"]');
     const colorInput = document.querySelector('.color-select');
-    colorInput.value = PEN_COLOR;
 
+    colorInput.value = PEN_COLOR;
     initGrid(containerGrid, PIXEL_PER_ROW);
 
     resetButton.addEventListener('click',() => resetGrid());
@@ -89,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (mode === "erase") {
             setPenColor(GRID_BACKGROUND_COLOR);
         } if (mode === "color") {
-            setPenColor(CURRENT_COLOR);
+            setPenColor(colorInput.value);
         }
 
         CURRENT_MODE = mode;

@@ -1,5 +1,5 @@
 To-do:
--color-selector
+[x] color-selector
 -schieberegler für pixel-größe
 -show grid button
 
