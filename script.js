@@ -4,8 +4,10 @@ GRID_BACKGROUND_COLOR = "white";
 BACKGROUND_COLOR = "lightgrey";
 ACTIVE_COLOR = "lightyellow";
 var PIXELS = [];
+var BACKGROUND_PIXELS;
 var ENABLE_DRAW = false;
 var CURRENT_COLOR = "black";
+var PEN_COLOR = "black";
 var CURRENT_MODE = "color";
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -23,10 +25,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initGrid(containerGrid, PIXEL_PER_ROW);
 
     resetButton.addEventListener('click',() => resetGrid());
-    setColor.addEventListener('click', () => setMode("color"));
-    setColorful.addEventListener('click', () => setMode("colorful"));
-    setEraser.addEventListener('click', () => setMode("erase"));
+    setColor.addEventListener('click', (event) => setMode(event.target.getAttribute("data-mode")));
+    setColorful.addEventListener('click', (event) => setMode(event.target.getAttribute("data-mode")));
+    setEraser.addEventListener('click', (event) => setMode(event.target.getAttribute("data-mode")));
     setSize.addEventListener('click', () => setPixelPerRow(containerGrid));
+    
     function createGrid(container, pixelPerRow) {
         const size = SIZE / pixelPerRow;
 
@@ -48,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function stylePixel(pixel) {
         if (CURRENT_MODE === "color" || CURRENT_MODE === "erase") {
-            pixel.style.backgroundColor = CURRENT_COLOR;
+            pixel.style.backgroundColor = PEN_COLOR;
         } else {
             const red = Math.floor(Math.random()*255);
             const green = Math.floor(Math.random()*255); 
@@ -71,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setPenColor(color) {
-        CURRENT_COLOR = color;
+        PEN_COLOR = color;
     }
 
     function setMode(mode) {
@@ -79,9 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
         oldActiveButton.classList.toggle('btn-active');
         const activeButton = document.querySelector(`[data-mode=${mode}]`)
         activeButton.classList.toggle('btn-active');
+
         if (mode === "erase") {
-            CURRENT_COLOR = GRID_BACKGROUND_COLOR;
+            setPenColor(GRID_BACKGROUND_COLOR);
+        } if (mode === "color") {
+            setPenColor(CURRENT_COLOR);
         }
+
         CURRENT_MODE = mode;
     }
 
