@@ -1,13 +1,13 @@
 SIZE = 500;
 PIXEL_PER_ROW = 16;
 GRID_BACKGROUND_COLOR = "white";
-BACKGROUND_COLOR = "lightgrey";
 ACTIVE_COLOR = "lightyellow";
 var PIXELS = [];
 var BACKGROUND_PIXELS;
 var ENABLE_DRAW = false;
 var PEN_COLOR = "black";
 var CURRENT_MODE = "color";
+var GRID = false;
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -15,25 +15,31 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('mouseup', () => ENABLE_DRAW = false);
 
     const containerGrid = document.querySelector('.container-grid');
-    const resetButton = document.querySelector('.button-reset');
+    const colorInput = document.querySelector('.color-select');
+    const clearButton = document.querySelector('.button-clear');
     const setColor = document.querySelector('[data-mode="color"]');
     const setColorful = document.querySelector('[data-mode="colorful"]');
     const setEraser = document.querySelector('[data-mode="erase"]');
-    const setSize = document.querySelector('[data-setting="size"]');
-    const colorInput = document.querySelector('.color-select');
+    const gridButton = document.querySelector('.button-grid');
+    const gridSizeSlider = document.querySelector('.slider');
+    const sliderValue = document.querySelector('.slider-value');
 
+    gridSizeSlider.value = PIXEL_PER_ROW;
+    updateSliderValue(gridSizeSlider);
     colorInput.value = PEN_COLOR;
     initGrid(containerGrid, PIXEL_PER_ROW);
 
-    resetButton.addEventListener('click',() => resetGrid());
+    clearButton.addEventListener('click',() => resetGrid());
     setColor.addEventListener('click', (event) => setMode(event.target.getAttribute("data-mode")));
     setColorful.addEventListener('click', (event) => setMode(event.target.getAttribute("data-mode")));
     setEraser.addEventListener('click', (event) => setMode(event.target.getAttribute("data-mode")));
-    setSize.addEventListener('click', () => setPixelPerRow(containerGrid));
+    gridButton.addEventListener('click', () => toggleGrid());
     colorInput.addEventListener('input', () => setPenColor(colorInput.value));
+    gridSizeSlider.oninput = () => updateGridSize(containerGrid, gridSizeSlider);
     
     function createGrid(container, pixelPerRow) {
         const size = SIZE / pixelPerRow;
+        const gridStyle = GRID ? `0.25px grey solid` : 'none';
 
         for (let i = 0; i < pixelPerRow; i++) {
             const row = document.createElement('div');
@@ -42,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 pixel.style.backgroundColor = GRID_BACKGROUND_COLOR;
                 pixel.style.height = `${size}px`;
                 pixel.style.width = `${size}px`;
-                pixel.style.border = `1px grey solid`;
+                pixel.style.border = gridStyle;
                 pixel.style.boxSizing = `border-box`;
                 PIXELS.push(pixel);
                 row.appendChild(pixel);
@@ -107,17 +113,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function setPixelPerRow(container) {
-        do{
-            var pixelPerRow = parseInt(window.prompt("Please enter a number from 1 to 100", ""), 10);
-        }while(isNaN(pixelPerRow) || pixelPerRow > 100 || pixelPerRow < 1);
+    function updateSliderValue(slider) {
+        sliderValue.textContent = `Grid size ${slider.value} x ${slider.value}`;
+    }
+
+    function updateGridSize(container, slider) {
         clearDiv(container);
-        initGrid(container, pixelPerRow);
+        initGrid(container, slider.value);
+        updateSliderValue(slider);
     }
 
     function resetGrid() {
         PIXELS.forEach((pixel) => {
             pixel.style.backgroundColor = GRID_BACKGROUND_COLOR;
         })
-    }    
+    }
+
+    function toggleGrid() {
+        gridButton.classList.toggle('btn-active');
+        if (GRID) {
+            PIXELS.forEach( (pixel) => { pixel.style.border = 'none' });
+            GRID = false;
+        } else {
+            PIXELS.forEach( (pixel) => { pixel.style.border = `0.25px grey solid` });
+            GRID = true;
+        }
+    }
 });

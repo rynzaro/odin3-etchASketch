@@ -11,11 +11,15 @@
             <div class="color-box">
                 <input class="color-select" type="color" value="black">  
             </div>
-            <button class="btn button-color btn-active" data-mode="color">Color</button>
+            <button class="btn button-color btn-active" data-mode="color">Solid Color</button>
             <button class="btn button-mode" data-mode="colorful">Colorful</button>
             <button class="btn button-mode" data-mode="erase">Eraser</button>
-            <button class="btn btn-setting" data-setting="size">Set Size</button>
-            <button class="btn button-reset">Reset</button>
+            <button class="btn button-grid">Display Grid</button>
+            <div class="container-slider">
+                <input type="range" min="1" max="64" class="slider" id="myRange">
+                <div class="slider-value"></div>
+            </div>
+            <button class="btn button-clear">Clear Grid</button>
         </div>
         <div class="container-grid"></div>
     </div>

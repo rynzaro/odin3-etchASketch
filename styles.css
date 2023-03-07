@@ -6,6 +6,8 @@
 :root {
     --main-bg-color: #7480A7;
     --sec-bg-color: #A79B74;
+    --thi-bg-color: #A7749A;
+    --main-font-size: 20px;
 }
 
 body {
@@ -22,8 +24,9 @@ body {
 
 .container-settings {
     display: grid;
-    grid-template-columns: 10em;
-    grid-auto-rows: 1.75em;
+    font-size: var(--main-font-size);
+    grid-template-columns: 12em;
+    grid-auto-rows: minmax(2em, auto);
     gap: 0.5em 0;
     background-color: var(--main-bg-color);
     padding: 10px;
@@ -41,7 +44,8 @@ body {
 
 .container-settings .btn, .container-settings .color-box {
     background-color: var(--main-bg-color);
-    border: 2px black solid;
+    border: 3px black solid;
+    font-size: var(--main-font-size);
 }
 
 .container-settings .btn:hover, .container-settings .btn-active {
@@ -52,6 +56,47 @@ body {
     cursor: pointer;
 }
 
+.container-settings .container-slider {
+    margin: 1em 0 .5em 0;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-settings .slider {
+    margin: 0 0 0.75em 0;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 5px;  
+    background: black;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.container-settings .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; 
+    background: black;
+    cursor: pointer;
+}
+
+.container-settings .slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: black;
+    cursor: pointer;
+}                                       
+
 .container-grid {
     display: flex;
     flex-wrap: wrap;
@@ -60,3 +105,6 @@ body {
     background-color: black;
 }
 
+.no-grid {
+    border: none;
+}
